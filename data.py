@@ -5,6 +5,7 @@ from tinydb import TinyDB, Query, where
 def save_to_db(content):
 	db = TinyDB('db/login_data.json')
 	db.insert(content)
+	return
 
 def get_from_db(field, value):
 	db = TinyDB('db/login_data.json')
@@ -15,6 +16,8 @@ def get_all_from_db():
 	all_items = db.all()
 	print "all_items", all_items
 	return all_items
+
+
 
 
 # def save_user_to_db(content):

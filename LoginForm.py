@@ -1,5 +1,5 @@
 from flask_wtf import Form, validators
-from wtforms import Form, validators, StringField, BooleanField, PasswordField
+from wtforms import Form, validators, StringField, BooleanField, PasswordField, FileField
 from wtforms.validators import DataRequired, Required
 
 
@@ -9,3 +9,4 @@ class LoginForm(Form):
     aboutme = StringField('About me', [validators.Length(min=0, max=200)])
     website = StringField('Website', [validators.Length(min=6, max=35)])
     feedback = StringField('What do you like about WeCode', [validators.Length(min=6, max=300)])
+    photo = FileField('Your Photo')

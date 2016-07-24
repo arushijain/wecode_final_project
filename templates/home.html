@@ -3,6 +3,20 @@
 
 {% block body %}
 
-<div> <h1> Welcome to the Paltel WeCode Student Portal </h1></div>
+<h1> Posts </h1>
+
+{% for post in posts %}
+ 	<p> {{ post.id }} {{ post.timestamp }} {{ post.username }} {{ post.content }}</p>
+{% endfor %}
+
+
+<h2> Add a new Post </h2>
+<div>
+<form method=post action="/">
+    <div> {{ form.username.label }} : {{ form.username }} </div>
+    <div> {{ form.content.label }} : {{ form.content }} </div>
+  <p><input type=submit value=Post> </p>
+</form>
+</div>
 
 {% endblock %}
