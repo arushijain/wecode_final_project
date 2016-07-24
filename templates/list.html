@@ -1,0 +1,10 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block body %}
+
+{% for user in all_users %}
+  <a href="{{ user.username }}" >{{ user.username }} </a> </p>
+{% endfor %}
+
+{% endblock %}

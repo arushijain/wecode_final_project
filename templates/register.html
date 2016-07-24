@@ -1,0 +1,17 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block body %}
+
+<div>
+<form method=post action="/login">
+    <div> {{ form.username.label }} : {{ form.username }} </div>
+    <div> {{ form.email.label }} : {{ form.email }} </div>
+    <div> {{ form.aboutme.label }} : {{ form.aboutme }} </div>
+    <div> {{ form.website.label }} : {{ form.website }} </div>
+    <div> {{ form.feedback.label }} : {{ form.feedback }} </div>
+  <p><input type=submit value=Register> </p>
+</form>
+</div>
+
+{% endblock %}
