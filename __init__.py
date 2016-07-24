@@ -3,16 +3,15 @@ import LoginForm, PostForm
 import data, json, dataset_api
 from werkzeug.utils import secure_filename
 
+
 app = Flask(__name__, static_url_path='/static', template_folder='templates')
 db = dataset_api.Data()
-
-UPLOAD_FOLDER = '/public/images/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 @app.route('/<username>')
 def login_success(username):
     form = db.get_user(username)
-    return render_template('/user.html', username=username, form=form)
+    image_path = db.get_image(username)
+    return render_template('/user.html', username=username, form=form, img=image_path)
 
 @app.route('/',  methods=['GET', 'POST'])
 def home():
@@ -46,16 +45,12 @@ def login():
     if request.method == 'POST': # and form.validate():
     	content =  request.form
         username = content['username']
-        file = request.files['file']
-        if file.filename == '':
-            print 'No selected file'
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+        if db.user_exists(username) is False:
+            image_data = db.create_image(request)
+            db.add_user(content, image_data)
+        else:
+            error = "Username " + username + " is already taken"
             return render_template('error.html', error=error)
-        #return redirect(url_for('login_success', username=content['username']))
         return redirect(username)
     return render_template('register.html', form=form)
         
@@ -63,7 +58,6 @@ def login():
 
 if __name__ == "__main__":
     app.debug = True
-    app.config("upload_folder") = UPLOAD_FOLDER
     app.secret_key = 's3cr3t'
     app.run(port=3000)
 

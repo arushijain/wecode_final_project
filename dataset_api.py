@@ -1,4 +1,7 @@
 import dataset, sqlalchemy, time, datetime
+import PIL.Image
+from cStringIO import StringIO
+import os
 
 drop_condition = True
 
@@ -20,8 +23,6 @@ class Data(object):
 			post_table.create_column('username', sqlalchemy.String)
 			post_table.create_column('content', sqlalchemy.String)
 			post_table.create_column('timestamp', sqlalchemy.DateTime)
-		print "All user columns are: ", self.db['user'].columns
-		print "All post columns are: ", self.db['posts'].columns
 
 	def list_all_tables(self):
 		return self.db.tables
@@ -32,8 +33,14 @@ class Data(object):
 		user = self.db.get_table('user').find_one(username=username)
 		user['photo'] = filename
 		user_table.update(user, 'username')
-		print "filename:", filename
 
+	def get_image(self, username):
+		imgfile = StringIO(self.db.get_table('user').find_one(username=username)['photo'])
+		img = PIL.Image.open(imgfile)
+		path = os.path.join('static', 'images', username + ".jpg")
+		open(path, 'w')
+		img.save(path, "JPEG")
+		return path
 
 	def add_post(self, post):
 		post_table = self.db.get_table('posts')
@@ -53,5 +60,12 @@ class Data(object):
 
 	def user_exists(self, username):
 		return (self.db.get_table('user').find_one(username=username) != None)
+
+	def create_image(self, request):
+		image_data = None
+		file = request.files['photo']
+		if file:
+			image_data = file.read()
+		return image_data
 
 
