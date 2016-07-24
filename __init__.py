@@ -46,21 +46,14 @@ def login():
     if request.method == 'POST': # and form.validate():
     	content =  request.form
         username = content['username']
-        # print "PHOTO IS:", form.photo
-        # print "PHOTO DATA:", form.photo.data
-        file = request.files['photo']
-        filename = secure_filename(form.photo.data)
-        #print "FILE ", file
-
-        image_data = None
-        if file:
-            print "image exists"
-            image_data = file.read()
-            #
-        if db.user_exists(username) is False:
-            db.add_user(content, image_data.decode('utf-8'))
-        else:
-            error = "Username " + username + " is already taken"
+        file = request.files['file']
+        if file.filename == '':
+            print 'No selected file'
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
             return render_template('error.html', error=error)
         #return redirect(url_for('login_success', username=content['username']))
         return redirect(username)
